@@ -19,6 +19,7 @@
   ],
   "type": "module",
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.lib.json",
     "test": "vitest run",

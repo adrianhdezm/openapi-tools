@@ -36,6 +36,8 @@
     "vitest": "^3.2.1"
   },
   "dependencies": {
+    "@hyperjump/json-pointer": "^1.1.1",
+    "@hyperjump/json-schema": "^1.14.1",
     "commander": "^14.0.0",
     "js-yaml": "^4.1.0"
   }

@@ -5,8 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import { Command } from 'commander';
-import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { filterOpenApiPaths } from './utils/filter-paths.js';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
+import { isValidOpenapiSchema } from './utils/validation.js';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -26,18 +27,23 @@ program
   .requiredOption('--input <input>', 'Input OpenAPI YAML file')
   .requiredOption('--output <output>', 'Output filtered YAML file')
   .requiredOption('--filter <filter>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
-  .action((opts) => {
+  .action(async (opts) => {
     const { input, output, filter } = opts;
-    const doc = yaml.load(fs.readFileSync(input, 'utf8')) as OpenAPI.Document;
-
-    // Validate input OpenAPI document
-    // ToDo: Add validation logic if needed
+    const fileContent = yaml.load(fs.readFileSync(input, 'utf8'));
 
     // Parse filter: "/v1/chat/completions,/v1/models"
     const pathNames = filter
       .split(',')
       .map((p: string) => p.trim())
       .filter(Boolean);
+
+    // Validate input OpenAPI document
+    const isValidSchema = await isValidOpenapiSchema(fileContent);
+    if (!isValidSchema) {
+      console.error('Invalid OpenAPI schema. Please check the input file.');
+      process.exit(1);
+    }
+    const doc = fileContent as OpenAPI.Document; // Here we are sure that the loaded content is an OpenAPI document
 
     const filtered = filterOpenApiPaths(doc, pathNames);
 

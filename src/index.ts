@@ -8,6 +8,9 @@ import { Command } from 'commander';
 import { filterOpenApiPaths } from './utils/filter-paths.js';
 import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { isValidOpenapiSchema } from './utils/validation.js';
+import { extractSchemas } from './utils/extract-schemas.js';
+import { convertSchema } from './utils/json-schema-to-zod.js';
+import Handlebars from 'handlebars';
 
 // __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +52,57 @@ program
 
     fs.writeFileSync(output, yaml.dump(filtered), 'utf8');
     console.log(`Filtered OpenAPI spec written to ${output}`);
+  });
+
+program
+  .command('generate-zod')
+  .description('Generate Zod schemas from an OpenAPI spec')
+  .requiredOption('--input <input>', 'Input OpenAPI file (YAML or JSON)')
+  .requiredOption('--output <output>', 'Output directory for schemas')
+  .option('-p, --select-paths <paths>', 'Comma-separated list of path prefixes')
+  .action(async (opts) => {
+    const { input, output, selectPaths } = opts;
+    const raw = fs.readFileSync(input, 'utf8');
+    const fileContent = input.endsWith('.json') ? JSON.parse(raw) : yaml.load(raw);
+
+    const isValidSchema = await isValidOpenapiSchema(fileContent);
+    if (!isValidSchema) {
+      console.error('Invalid OpenAPI schema. Please check the input file.');
+      process.exit(1);
+    }
+    const doc = fileContent as OpenAPI.Document;
+    const prefixes = selectPaths
+      ? selectPaths
+          .split(',')
+          .map((p: string) => p.trim())
+          .filter(Boolean)
+      : null;
+
+    const schemas = extractSchemas(doc, prefixes);
+    if (Object.keys(schemas).length === 0) {
+      console.warn('\x1b[33m[openapi-tools] Warning:\x1b[0m No schemas matched the filter.');
+      return;
+    }
+
+    fs.mkdirSync(output, { recursive: true });
+    const templateDir = path.resolve(__dirname, '../templates/zod');
+    const schemaTemplate = Handlebars.compile(fs.readFileSync(path.join(templateDir, 'zod-schema.hbs'), 'utf8'));
+    const indexTemplate = Handlebars.compile(fs.readFileSync(path.join(templateDir, 'index.hbs'), 'utf8'));
+
+    const componentDir = path.join(output, 'components');
+    fs.mkdirSync(componentDir, { recursive: true });
+
+    const schemaNames: string[] = [];
+    for (const [name, schema] of Object.entries(schemas)) {
+      const { zodString, imports } = convertSchema(schema as any);
+      const content = schemaTemplate({ schemaName: name, imports: Array.from(imports), zodString });
+      fs.writeFileSync(path.join(componentDir, `${name}.ts`), content, 'utf8');
+      schemaNames.push(name);
+    }
+
+    const indexContent = indexTemplate({ schemas: schemaNames });
+    fs.writeFileSync(path.join(output, 'index.ts'), indexContent, 'utf8');
+    console.log(`Generated Zod schemas written to ${output}`);
   });
 
 program.parse(process.argv);

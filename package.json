@@ -1,0 +1,42 @@
+{
+  "name": "@ai-foundry/openapi-tools",
+  "version": "0.0.1",
+  "description": "A CLI tool to work with OpenAPI specifications, including generation, validation, and more.",
+  "author": "Adrian Hernandez-Mendez",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianhdezm/openapi-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adrianhdezm/openapi-tools/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json",
+    "test": "vitest run",
+    "format": "prettier --write . \"src/**/*.{ts,json,mjs,yml}\" --cache",
+    "format:check": "prettier --check . \"src/**/*.{ts,json,mjs,yml}\" --cache",
+    "ci": "npm run build && npm run format:check && npm run test",
+    "release": "./scripts/release.sh"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.15.29",
+    "openapi-types": "^12.1.3",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.1"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "js-yaml": "^4.1.0"
+  }
+}

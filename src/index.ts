@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import { Command } from 'commander';
-import { filterOpenApiPaths } from './utils/filter-paths.js';
+import { filterOpenApiPaths } from './utils/filter-openapi-paths.js';
 import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { isValidOpenapiSchema } from './utils/validation.js';
 import { extractSchemas } from './utils/extract-schemas.js';

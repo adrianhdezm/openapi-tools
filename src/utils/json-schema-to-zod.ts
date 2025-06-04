@@ -11,7 +11,7 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
   function walk(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): string {
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
-      const name = match ? match[1] : s.$ref;
+      const name = match?.[1] ?? s.$ref;
       imports.add(name);
       return `z.lazy(() => ${name})`;
     }

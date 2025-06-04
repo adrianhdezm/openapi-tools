@@ -1,11 +1,6 @@
+{{!-- prettier-ignore-start --}}
 import { z } from 'zod';
-{{#each imports}}
-  import {
-  {{this}}
-  } from './{{this}}';
-{{/each}}
+{{#each imports}}import { {{this}} } from './{{this}}';{{/each}}
+export const {{schemaName}} = {{zodString}};
+{{!-- prettier-ignore-end --}}
 
-export const
-{{schemaName}}
-=
-{{zodString}};

@@ -1,5 +1,4 @@
+{{!-- prettier-ignore --}}
 {{#each schemas}}
-  export {
-  {{this}}
-  } from './{{this}}';
+export { {{this}} } from './{{this}}';
 {{/each}}

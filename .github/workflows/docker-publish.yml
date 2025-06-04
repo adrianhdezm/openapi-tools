@@ -23,4 +23,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/openapi-tools:${{ github.ref_name }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/openapi-tools:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/openapi-tools:latest

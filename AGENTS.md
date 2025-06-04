@@ -1,6 +1,6 @@
 # AGENTS.md
 
-For every commit made by an automated agent, follow the guidelines defined in `.github/commit-instructions.md`【F:.github/commit-instructions.md】.
+Follow these guidelines when creating or modifying the contents of the repository.
 
 1. **Commit‐Message Template**
 
@@ -9,5 +9,6 @@ For every commit made by an automated agent, follow the guidelines defined in `.
    - Always run `npm run format` before committing to ensure code style consistency.
 
 2. **Adding Features to `utils/`**
-   - For each new feature added under `utils/`, there must be corresponding tests in the appropriate test directory.
+
+   - For each new feature added under `utils/`, there must be corresponding tests in the appropriate tests directory.
    - Tests should cover expected behavior and edge cases for that utility.

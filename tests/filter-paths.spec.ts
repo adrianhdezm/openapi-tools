@@ -31,9 +31,7 @@ describe('filterOpenApiPaths', () => {
     const filtered = filterOpenApiPaths(openApiDoc as any, ['/notfound']);
     // Should return the original doc if no paths matched
     expect(filtered).toEqual(openApiDoc);
-    expect(warnSpy).toHaveBeenCalledWith(
-      '\x1b[33m[openapi-tools] Warning:\x1b[0m Path "/notfound" not found in the OpenAPI spec.'
-    );
+    expect(warnSpy).toHaveBeenCalledWith('\x1b[33m[openapi-tools] Warning:\x1b[0m Path "/notfound" not found in the OpenAPI spec.');
     warnSpy.mockRestore();
   });
 });

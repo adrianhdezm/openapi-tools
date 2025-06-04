@@ -1,0 +1,11 @@
+import { z } from 'zod';
+{{#each imports}}
+  import {
+  {{this}}
+  } from './{{this}}';
+{{/each}}
+
+export const
+{{schemaName}}
+=
+{{zodString}};

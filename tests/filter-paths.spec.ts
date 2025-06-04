@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { filterOpenApiPaths } from '../src/utils/filter-paths';
+import { filterOpenApiPaths } from '../src/utils/filter-openapi-paths';
 
 const openApiDoc = {
   openapi: '3.0.0',

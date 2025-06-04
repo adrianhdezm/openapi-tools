@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { collectSchemaRefs } from '../src/utils/filter-paths';
+import { collectSchemaRefs } from '../src/utils/collect-schema-refs';
 
 describe('collectSchemaRefs', () => {
   it('collects a single $ref', () => {

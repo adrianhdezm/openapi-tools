@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import { Command } from 'commander';
-import type { OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { filterOpenApiPaths } from './utils/filter-paths.js';
 
 // __dirname in ES modules
@@ -28,7 +28,7 @@ program
   .requiredOption('--filter <filter>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
   .action((opts) => {
     const { input, output, filter } = opts;
-    const doc = yaml.load(fs.readFileSync(input, 'utf8')) as OpenAPIV3.Document;
+    const doc = yaml.load(fs.readFileSync(input, 'utf8')) as OpenAPI.Document;
 
     // Validate input OpenAPI document
     // ToDo: Add validation logic if needed

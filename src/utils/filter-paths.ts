@@ -1,4 +1,4 @@
-import { type OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
 export type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
 export type JsonObject = { [key: string]: JsonValue };
@@ -22,8 +22,8 @@ export function collectSchemaRefs(obj: unknown, refs: Set<string> = new Set()): 
   return refs;
 }
 
-export function filterOpenApiPaths(doc: OpenAPIV3.Document, pathNames: string[]): OpenAPIV3.Document {
-  const filteredPaths: OpenAPIV3.PathsObject = {};
+export function filterOpenApiPaths(doc: OpenAPI.Document, pathNames: string[]): OpenAPI.Document {
+  const filteredPaths: OpenAPI.PathsObject = {};
   for (const pathName of pathNames) {
     if (doc.paths && doc.paths[pathName]) {
       filteredPaths[pathName] = doc.paths[pathName];
@@ -50,7 +50,7 @@ export function filterOpenApiPaths(doc: OpenAPIV3.Document, pathNames: string[])
 
   // Recursively collect referenced schemas
   const allSchemas = doc.components?.schemas ?? {};
-  const collectedSchemas: Record<string, OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject> = {};
+  const collectedSchemas: Record<string, OpenAPI.SchemaObject | OpenAPI.ReferenceObject> = {};
   const toProcess = Array.from(schemaRefs);
   const processed = new Set<string>();
 
@@ -71,7 +71,7 @@ export function filterOpenApiPaths(doc: OpenAPIV3.Document, pathNames: string[])
     }
   }
 
-  const filtered: OpenAPIV3.Document = {
+  const filtered: OpenAPI.Document = {
     ...doc,
     paths: filteredPaths,
     components: {

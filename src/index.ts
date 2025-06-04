@@ -26,13 +26,13 @@ program
   .description('Filter OpenAPI spec by comma-separated list of path names')
   .requiredOption('--input <input>', 'Input OpenAPI YAML file')
   .requiredOption('--output <output>', 'Output filtered YAML file')
-  .requiredOption('--filter <filter>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
+  .requiredOption('--select-paths <paths>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
   .action(async (opts) => {
-    const { input, output, filter } = opts;
+    const { input, output, selectPaths } = opts;
     const fileContent = yaml.load(fs.readFileSync(input, 'utf8'));
 
-    // Parse filter: "/v1/chat/completions,/v1/models"
-    const pathNames = filter
+    // Parse select-paths: "/v1/chat/completions,/v1/models"
+    const pathNames = selectPaths
       .split(',')
       .map((p: string) => p.trim())
       .filter(Boolean);

@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
+import { loadOpenapi } from './utils/load-openapi.js';
 import { Command } from 'commander';
 import { filterOpenApiPaths } from './utils/filter-openapi-paths.js';
 import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
@@ -28,12 +29,12 @@ program.name('openapi-tools').description('OpenAPI Tools CLI').version(version);
 program
   .command('filter')
   .description('Filter OpenAPI spec by comma-separated list of path names')
-  .requiredOption('--input <input>', 'Input OpenAPI YAML file')
+  .requiredOption('--input <input>', 'Input OpenAPI YAML file or URL')
   .requiredOption('--output <output>', 'Output filtered YAML file')
   .requiredOption('-p, --select-paths <paths>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
   .action(async (opts) => {
     const { input, output, selectPaths } = opts;
-    const fileContent = yaml.load(fs.readFileSync(input, 'utf8'));
+    const fileContent = await loadOpenapi(input);
 
     // Parse select-paths: "/v1/chat/completions,/v1/models"
     const pathNames = selectPaths
@@ -58,13 +59,12 @@ program
 program
   .command('generate-zod')
   .description('Generate Zod schemas from an OpenAPI spec')
-  .requiredOption('--input <input>', 'Input OpenAPI file (YAML or JSON)')
+  .requiredOption('--input <input>', 'Input OpenAPI file (YAML or JSON) or URL')
   .requiredOption('--output <output>', 'Output directory for schemas')
   .option('-p, --select-paths <paths>', 'Comma-separated list of path prefixes')
   .action(async (opts) => {
     const { input, output, selectPaths } = opts;
-    const raw = fs.readFileSync(input, 'utf8');
-    const fileContent = input.endsWith('.json') ? JSON.parse(raw) : yaml.load(raw);
+    const fileContent = await loadOpenapi(input);
 
     const isValidSchema = await isValidOpenapiSchema(fileContent);
     if (!isValidSchema) {
@@ -109,13 +109,12 @@ program
 program
   .command('generate-python-dict')
   .description('Generate Python TypedDicts from an OpenAPI spec')
-  .requiredOption('--input <input>', 'Input OpenAPI file (YAML or JSON)')
+  .requiredOption('--input <input>', 'Input OpenAPI file (YAML or JSON) or URL')
   .requiredOption('--output <output>', 'Output directory for schemas')
   .option('-p, --select-paths <paths>', 'Comma-separated list of path prefixes')
   .action(async (opts) => {
     const { input, output, selectPaths } = opts;
-    const raw = fs.readFileSync(input, 'utf8');
-    const fileContent = input.endsWith('.json') ? JSON.parse(raw) : yaml.load(raw);
+    const fileContent = await loadOpenapi(input);
 
     const isValidSchema = await isValidOpenapiSchema(fileContent);
     if (!isValidSchema) {

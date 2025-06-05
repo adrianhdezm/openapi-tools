@@ -44,7 +44,7 @@ Usage: openapi-tools filter [options]
 Filter OpenAPI spec by comma-separated list of path names
 
 Options:
-  --input <input>         Input OpenAPI YAML file
+  --input <input>         Input OpenAPI YAML file or URL
   --output <output>       Output filtered YAML file
   --select-paths <paths>  Comma-separated list of path names, e.g.,
                           "/v1/chat/completions,/v1/models"
@@ -59,7 +59,7 @@ Usage: openapi-tools generate-zod [options]
 Generate Zod schemas from an OpenAPI spec
 
 Options:
-  --input <input>             Input OpenAPI file (YAML or JSON)
+  --input <input>             Input OpenAPI file (YAML or JSON) or URL
   --output <output>           Output directory for schemas
   -p, --select-paths <paths>  Comma-separated list of path prefixes
   -h, --help                  display help for command
@@ -73,7 +73,7 @@ Usage: openapi-tools generate-python-dict [options]
 Generate Python TypedDicts from an OpenAPI spec
 
 Options:
-  --input <input>             Input OpenAPI file (YAML or JSON)
+  --input <input>             Input OpenAPI file (YAML or JSON) or URL
   --output <output>           Output directory for schemas
   -p, --select-paths <paths>  Comma-separated list of path prefixes
   -h, --help                  display help for command

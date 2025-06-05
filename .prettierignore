@@ -1,2 +1,4 @@
 templates/zod/*.hbs
 
+
+templates/python-dict/*.hbs

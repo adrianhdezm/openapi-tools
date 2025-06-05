@@ -1,0 +1,10 @@
+{{#each schemas}}
+  from .{{this}}
+  import
+  {{this}}
+{{/each}}
+
+__all__ = [
+{{#each schemas}}
+  '{{this}}',
+{{/each}}]

@@ -21,9 +21,12 @@ describe('generate-python-dict', () => {
       .join('\n');
     const content = [typingLine, importLines, '', definition, ''].filter(Boolean).join('\n');
     const tmp = path.join(__dirname, 'tmp_user.py');
-    fs.writeFileSync(tmp, content);
-    child_process.execSync(`python3 -m py_compile ${tmp}`);
-    fs.unlinkSync(tmp);
+    try {
+      fs.writeFileSync(tmp, content);
+      child_process.execSync(`python3 -m py_compile ${tmp}`);
+    } finally {
+      fs.unlinkSync(tmp);
+    }
     expect(content).toMatchSnapshot();
   });
 

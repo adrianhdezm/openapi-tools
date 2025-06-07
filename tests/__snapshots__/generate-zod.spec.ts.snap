@@ -1,15 +1,14 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`generate-zod > generates a simple object schema 1`] = `
-"
-export const User = z.object({
+"export const User = z.object({
   id: z.string()
 });
 "
 `;
 
 exports[`generate-zod > generates enums and nested arrays 1`] = `
-"import { Status } from './Status';\\n
+"import { Status } from './Status';
 export const Wrapper = z.array(z.lazy(() => Status));
 "
 `;

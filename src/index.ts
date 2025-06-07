@@ -93,19 +93,18 @@ program
     const templateSource = fs.readFileSync(templatePath, 'utf8');
     const template = Handlebars.compile(templateSource);
 
-    const renderedSchemas = Object.entries(schemas).map(([name, schema], idx) => {
+    const schemaData = Object.entries(schemas).map(([name, schema]) => {
       const { zodString } = convertSchema(schema as any);
       const desc = (schema as any).description as string | undefined;
-      return template({
+      return {
         schemaName: name,
         zodString,
         description: desc ? desc.replace(/\n/g, ' ') : undefined,
-        imports: [],
-        includeHeader: idx === 0
-      });
+        imports: []
+      };
     });
 
-    const content = renderedSchemas.join('\n\n');
+    const content = template({ includeHeader: true, schemas: schemaData });
     fs.writeFileSync(outFile, content, 'utf8');
     console.log(`Generated Zod schemas written to ${outFile}`);
   });

@@ -13,7 +13,7 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const name = match?.[1] ?? s.$ref;
       imports.add(name);
-      return `z.lazy(() => ${name})`;
+      return name;
     }
 
     if (s.enum) {
@@ -42,10 +42,11 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
             expr += '.optional()';
           }
           const desc = (value as any).description;
-          const comment = desc ? ` // ${desc.replace(/\n/g, ' ')}` : '';
-          return `${JSON.stringify(key)}: ${expr}${comment}`;
+          const meta = desc ? `.meta({ description: ${JSON.stringify(desc.replace(/\n/g, ' '))} })` : '';
+          return `${key}: ${expr}${meta}`;
         });
-        return `z.object({ ${fields.join(', ')} })`;
+        const inner = fields.map((f) => `  ${f}`).join(',\n');
+        return `z.object({\n${inner}\n})`;
       }
     }
   }

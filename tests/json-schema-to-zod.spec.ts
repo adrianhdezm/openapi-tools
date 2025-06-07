@@ -16,7 +16,7 @@ describe('convertSchema', () => {
       type: 'array',
       items: { $ref: '#/components/schemas/User' }
     } as any);
-    expect(zodString).toBe('z.array(z.lazy(() => User))');
+    expect(zodString).toBe('z.array(User)');
     expect(imports.has('User')).toBe(true);
   });
 
@@ -27,10 +27,10 @@ describe('convertSchema', () => {
       required: ['id']
     } as any;
     const { zodString } = convertSchema(schema);
-    expect(zodString).toBe('z.object({ "id": z.string(), "name": z.string().optional() })');
+    expect(zodString).toBe('z.object({\n  id: z.string(),\n  name: z.string().optional()\n})');
   });
 
-  it('adds descriptions as comments', () => {
+  it('adds descriptions as meta', () => {
     const schema = {
       type: 'object',
       description: 'User object',
@@ -40,6 +40,6 @@ describe('convertSchema', () => {
       required: ['id']
     } as any;
     const { zodString } = convertSchema(schema);
-    expect(zodString).toBe('z.object({ "id": z.string() // identifier })');
+    expect(zodString).toBe('z.object({\n  id: z.string().meta({ description: "identifier" })\n})');
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@ai-foundry/openapi-tools",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "A CLI tool to work with OpenAPI specifications, including generation, validation, and more.",
   "author": "Adrian Hernandez-Mendez",
   "license": "MIT",

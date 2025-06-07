@@ -104,7 +104,7 @@ program
       };
     });
 
-    const content = template({ includeHeader: true, schemas: schemaData });
+    const content = template({ schemas: schemaData });
     fs.writeFileSync(outFile, content, 'utf8');
     console.log(`Generated Zod schemas written to ${outFile}`);
   });

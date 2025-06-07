@@ -20,7 +20,6 @@ describe('generate-zod', () => {
     const schemas = extractSchemas(doc, null);
     const { zodString, imports } = convertSchema(schemas.User as any);
     const content = schemaTemplate({
-      includeHeader: false,
       schemas: [{ schemaName: 'User', imports: Array.from(imports), zodString }]
     });
     const result = ts.transpileModule(content, { compilerOptions: { module: ts.ModuleKind.ESNext } });
@@ -43,7 +42,6 @@ describe('generate-zod', () => {
     const schemas = extractSchemas(doc, null);
     const { zodString } = convertSchema(schemas.Wrapper as any);
     const content = schemaTemplate({
-      includeHeader: false,
       schemas: [{ schemaName: 'Wrapper', imports: ['Status'], zodString }]
     });
     const result = ts.transpileModule(content, { compilerOptions: { module: ts.ModuleKind.ESNext } });

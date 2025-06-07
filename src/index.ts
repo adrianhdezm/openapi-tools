@@ -154,7 +154,7 @@ program
     const allLine = ['__all__ = [', ...schemaNames.map((n) => `  \'${n}\',`), ']'].join('\n');
 
     const defsBlock = definitions.join('\n\n');
-    const content = [header, typingLine, '', defsBlock, '', allLine, ''].join('\n');
+    const content = [header, typingLine, '', , allLine, '', defsBlock, ''].join('\n');
     fs.writeFileSync(outFile, content, 'utf8');
     console.log(`Generated Python TypedDicts written to ${outFile}`);
   });

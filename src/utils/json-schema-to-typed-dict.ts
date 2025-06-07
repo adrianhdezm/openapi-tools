@@ -12,7 +12,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const refName = match?.[1] ?? s.$ref;
-      return `'${refName}'`;
+      return `${refName}`;
     }
 
     if (s.enum) {
@@ -31,9 +31,9 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       case 'boolean':
         return 'bool';
       case 'array':
-        if (!s.items) return 'list[Any]';
-        typingImports.add('list');
-        return `list[${toType(s.items)}]`;
+        if (!s.items) return 'List[Any]';
+        typingImports.add('List');
+        return `List[${toType(s.items)}]`;
       case 'object':
         typingImports.add('Any');
         return 'dict[str, Any]';

@@ -27,7 +27,7 @@ describe('convertSchema', () => {
       required: ['id']
     } as any;
     const { zodString } = convertSchema(schema);
-    expect(zodString).toBe('z.object({ "id": z.string(), "name": z.string().optional() })');
+    expect(zodString).toBe('z.object({\n  id: z.string(),\n  name: z.string().optional()\n})');
   });
 
   it('adds descriptions as comments', () => {
@@ -40,6 +40,6 @@ describe('convertSchema', () => {
       required: ['id']
     } as any;
     const { zodString } = convertSchema(schema);
-    expect(zodString).toBe('z.object({ "id": z.string() // identifier })');
+    expect(zodString).toBe('z.object({\n  id: z.string() // identifier\n})');
   });
 });

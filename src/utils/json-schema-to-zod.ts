@@ -43,9 +43,10 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
           }
           const desc = (value as any).description;
           const comment = desc ? ` // ${desc.replace(/\n/g, ' ')}` : '';
-          return `${JSON.stringify(key)}: ${expr}${comment}`;
+          return `${key}: ${expr}${comment}`;
         });
-        return `z.object({ ${fields.join(', ')} })`;
+        const inner = fields.map((f) => `  ${f}`).join(',\n');
+        return `z.object({\n${inner}\n})`;
       }
     }
   }

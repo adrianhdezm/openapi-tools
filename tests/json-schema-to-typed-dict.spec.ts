@@ -50,6 +50,30 @@ describe('generate-python-dict', () => {
     expect(content).toMatchSnapshot();
   });
 
+  it('adds descriptions as comments', () => {
+    const doc: any = {
+      openapi: '3.1.0',
+      info: { title: 't', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          User: {
+            type: 'object',
+            description: 'User object',
+            properties: {
+              id: { type: 'string', description: 'identifier' }
+            },
+            required: ['id']
+          }
+        }
+      }
+    };
+    const schemas = extractSchemas(doc, null);
+    const { definition } = convertToTypedDict('User', schemas.User as any);
+    expect(definition).toContain('"""User object"""');
+    expect(definition).toContain('# identifier');
+  });
+
   it('filters schemas by path prefixes', () => {
     const doc: any = {
       openapi: '3.1.0',

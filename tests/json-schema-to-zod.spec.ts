@@ -29,4 +29,17 @@ describe('convertSchema', () => {
     const { zodString } = convertSchema(schema);
     expect(zodString).toBe('z.object({ "id": z.string(), "name": z.string().optional() })');
   });
+
+  it('adds descriptions as comments', () => {
+    const schema = {
+      type: 'object',
+      description: 'User object',
+      properties: {
+        id: { type: 'string', description: 'identifier' }
+      },
+      required: ['id']
+    } as any;
+    const { zodString } = convertSchema(schema);
+    expect(zodString).toBe('z.object({ "id": z.string() // identifier })');
+  });
 });

@@ -14,12 +14,9 @@ describe('generate-python-dict', () => {
       components: { schemas: { User: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } } }
     };
     const schemas = extractSchemas(doc, null);
-    const { definition, imports, typingImports } = convertToTypedDict('User', schemas.User as any);
+    const { definition, typingImports } = convertToTypedDict('User', schemas.User as any);
     const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
-    const importLines = Array.from(imports)
-      .map((i) => `from .${i} import ${i}`)
-      .join('\n');
-    const content = [typingLine, importLines, '', definition, ''].filter(Boolean).join('\n');
+    const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
     const tmp = path.join(__dirname, 'tmp_user.py');
     try {
       fs.writeFileSync(tmp, content);
@@ -43,12 +40,9 @@ describe('generate-python-dict', () => {
       }
     };
     const schemas = extractSchemas(doc, null);
-    const { definition, imports, typingImports } = convertToTypedDict('Wrapper', schemas.Wrapper as any);
+    const { definition, typingImports } = convertToTypedDict('Wrapper', schemas.Wrapper as any);
     const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
-    const importLines = Array.from(imports)
-      .map((i) => `from .${i} import ${i}`)
-      .join('\n');
-    const content = [typingLine, importLines, '', definition, ''].filter(Boolean).join('\n');
+    const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
     const tmp = path.join(__dirname, 'tmp_wrapper.py');
     fs.writeFileSync(tmp, content);
     child_process.execSync(`python3 -m py_compile ${tmp}`);

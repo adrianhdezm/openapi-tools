@@ -8,6 +8,5 @@ class User(TypedDict):
 
 exports[`generate-python-dict > generates enums and nested arrays 1`] = `
 "from typing import TypedDict, list
-from .Status import Status
-Wrapper = list[Status]"
+Wrapper = list['Status']"
 `;

@@ -2,20 +2,17 @@ import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
 export interface TypedDictResult {
   definition: string;
-  imports: Set<string>;
   typingImports: Set<string>;
 }
 
 export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): TypedDictResult {
-  const imports = new Set<string>();
   const typingImports = new Set<string>(['TypedDict']);
 
   function toType(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): string {
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const refName = match?.[1] ?? s.$ref;
-      imports.add(refName);
-      return refName;
+      return `'${refName}'`;
     }
 
     if (s.enum) {
@@ -69,5 +66,5 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     definition = `${name} = ${typeStr}`;
   }
 
-  return { definition, imports, typingImports };
+  return { definition, typingImports };
 }

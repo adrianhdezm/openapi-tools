@@ -89,7 +89,7 @@ program
     fs.mkdirSync(path.dirname(outFile), { recursive: true });
 
     // Load and compile the Handlebars template
-    const templatePath = path.resolve(__dirname, '../templates/zod/zod-schema.hbs');
+    const templatePath = path.resolve(__dirname, '../templates/ts/zod-schema.hbs');
     const templateSource = fs.readFileSync(templatePath, 'utf8');
     const template = Handlebars.compile(templateSource);
 

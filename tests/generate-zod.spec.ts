@@ -6,7 +6,7 @@ import ts from 'typescript';
 import { convertSchema } from '../src/utils/json-schema-to-zod';
 import { extractSchemas } from '../src/utils/extract-schemas';
 
-const templateDir = path.resolve('templates/zod');
+const templateDir = path.resolve('templates/ts');
 const schemaTemplate = Handlebars.compile(fs.readFileSync(path.join(templateDir, 'zod-schema.hbs'), 'utf8'));
 
 describe('generate-zod', () => {

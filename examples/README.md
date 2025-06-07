@@ -26,7 +26,7 @@ To generate Zod schemas for the same path prefix:
 ```bash
 npx @ai-foundry/openapi-tools generate-zod \
   --input https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/yaml/petstore.yaml \
-  --output ./zod \
+  --output ./models.ts \
   --select-paths "/pet"
 ```
 
@@ -37,6 +37,6 @@ To create Python `TypedDict` definitions:
 ```bash
 npx @ai-foundry/openapi-tools generate-python-dict \
   --input https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/yaml/petstore.yaml \
-  --output ./typed-dict/models.py \
+  --output ./models.py \
   --select-paths "/pet"
 ```

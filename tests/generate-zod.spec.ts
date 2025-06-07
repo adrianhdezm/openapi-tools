@@ -18,9 +18,9 @@ describe('generate-zod', () => {
       components: { schemas: { User: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } } }
     };
     const schemas = extractSchemas(doc, null);
-    const { zodString, imports } = convertSchema(schemas.User as any);
+    const { zodString } = convertSchema(schemas.User as any);
     const content = schemaTemplate({
-      schemas: [{ schemaName: 'User', imports: Array.from(imports), zodString }]
+      schemas: [{ schemaName: 'User', zodString }]
     });
     const result = ts.transpileModule(content, { compilerOptions: { module: ts.ModuleKind.ESNext } });
     expect(result.diagnostics?.length).toBe(0);
@@ -42,7 +42,7 @@ describe('generate-zod', () => {
     const schemas = extractSchemas(doc, null);
     const { zodString } = convertSchema(schemas.Wrapper as any);
     const content = schemaTemplate({
-      schemas: [{ schemaName: 'Wrapper', imports: ['Status'], zodString }]
+      schemas: [{ schemaName: 'Wrapper', zodString }]
     });
     const result = ts.transpileModule(content, { compilerOptions: { module: ts.ModuleKind.ESNext } });
     expect(result.diagnostics?.length).toBe(0);

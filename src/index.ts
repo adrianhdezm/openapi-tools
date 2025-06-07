@@ -99,8 +99,7 @@ program
       return {
         schemaName: name,
         zodString,
-        description: desc ? desc.replace(/\n/g, ' ') : undefined,
-        imports: []
+        description: desc ? desc.replace(/\n/g, ' ') : undefined
       };
     });
 

@@ -29,7 +29,7 @@ program.name('openapi-tools').description('OpenAPI Tools CLI').version(version);
 program
   .command('filter')
   .description('Filter OpenAPI spec by comma-separated list of path names')
-  .requiredOption('--input <input>', 'Input OpenAPI YAML file or URL')
+  .requiredOption('--input <input>', 'Input OpenAPI (YAML or JSON) file or URL')
   .requiredOption('--output <output>', 'Output filtered YAML file')
   .requiredOption('-p, --select-paths <paths>', 'Comma-separated list of path names, e.g., "/v1/chat/completions,/v1/models"')
   .action(async (opts) => {

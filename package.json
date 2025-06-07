@@ -15,7 +15,8 @@
     "dist",
     "README.md",
     "LICENSE",
-    "package.json"
+    "package.json",
+    "templates"
   ],
   "type": "module",
   "main": "dist/index.js",

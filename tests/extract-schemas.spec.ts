@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { extractSchemas } from '../src/utils/extract-schemas';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
-const doc: any = {
+const doc: OpenAPI.Document = {
   openapi: '3.1.0',
   info: { title: 't', version: '1.0' },
   paths: {

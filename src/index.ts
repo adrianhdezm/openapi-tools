@@ -94,8 +94,8 @@ program
     const template = Handlebars.compile(templateSource);
 
     const schemaData = Object.entries(schemas).map(([name, schema]) => {
-      const { zodString } = convertSchema(schema as any);
-      const desc = (schema as any).description as string | undefined;
+      const { zodString } = convertSchema(schema);
+      const desc = schema.description as string | undefined;
       return {
         schemaName: name,
         zodString,
@@ -145,7 +145,7 @@ program
 
     const typingImports = new Set<string>();
     const definitions = Object.entries(schemas).map(([name, schema]) => {
-      const res = convertToTypedDict(name, schema as any);
+      const res = convertToTypedDict(name, schema);
       res.typingImports.forEach((i) => typingImports.add(i));
       return { name, definition: res.definition };
     });

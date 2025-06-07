@@ -1,6 +1,3 @@
-export type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
-export type JsonObject = { [key: string]: JsonValue };
-
 export function collectSchemaRefs(obj: unknown, refs: Set<string> = new Set()): Set<string> {
   if (!obj || typeof obj !== 'object') {
     return refs;

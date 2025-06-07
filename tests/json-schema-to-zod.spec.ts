@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { convertSchema } from '../src/utils/json-schema-to-zod';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
 describe('convertSchema', () => {
   it('converts enums', () => {
     const { zodString, imports } = convertSchema({
       type: 'string',
       enum: ['a', 'b']
-    } as any);
+    } as OpenAPI.SchemaObject);
     expect(zodString).toBe('z.enum(["a", "b"])');
     expect(imports.size).toBe(0);
   });
@@ -15,7 +16,7 @@ describe('convertSchema', () => {
     const { zodString, imports } = convertSchema({
       type: 'array',
       items: { $ref: '#/components/schemas/User' }
-    } as any);
+    } as OpenAPI.SchemaObject);
     expect(zodString).toBe('z.array(User)');
     expect(imports.has('User')).toBe(true);
   });
@@ -25,7 +26,7 @@ describe('convertSchema', () => {
       type: 'object',
       properties: { id: { type: 'string' }, name: { type: 'string' } },
       required: ['id']
-    } as any;
+    } as OpenAPI.SchemaObject;
     const { zodString } = convertSchema(schema);
     expect(zodString).toBe('z.object({\n  id: z.string(),\n  name: z.string().optional()\n})');
   });
@@ -38,7 +39,7 @@ describe('convertSchema', () => {
         id: { type: 'string', description: 'identifier' }
       },
       required: ['id']
-    } as any;
+    } as OpenAPI.SchemaObject;
     const { zodString } = convertSchema(schema);
     expect(zodString).toBe('z.object({\n  id: z.string().meta({ description: "identifier" })\n})');
   });

@@ -4,17 +4,18 @@ import path from 'path';
 import { convertToTypedDict } from '../src/utils/json-schema-to-typed-dict';
 import { extractSchemas } from '../src/utils/extract-schemas';
 import child_process from 'child_process';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
 describe('generate-python-dict', () => {
   it('generates a simple object schema', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {},
       components: { schemas: { User: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } } }
     };
     const schemas = extractSchemas(doc, null);
-    const { definition, typingImports } = convertToTypedDict('User', schemas.User as any);
+    const { definition, typingImports } = convertToTypedDict('User', schemas.User as OpenAPI.SchemaObject);
     const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
     const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
     const tmp = path.join(__dirname, 'tmp_user.py');
@@ -28,7 +29,7 @@ describe('generate-python-dict', () => {
   });
 
   it('generates enums and nested arrays', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {},
@@ -40,7 +41,7 @@ describe('generate-python-dict', () => {
       }
     };
     const schemas = extractSchemas(doc, null);
-    const { definition, typingImports } = convertToTypedDict('Wrapper', schemas.Wrapper as any);
+    const { definition, typingImports } = convertToTypedDict('Wrapper', schemas.Wrapper as OpenAPI.SchemaObject);
     const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
     const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
     const tmp = path.join(__dirname, 'tmp_wrapper.py');
@@ -51,7 +52,7 @@ describe('generate-python-dict', () => {
   });
 
   it('adds descriptions as comments', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {},
@@ -69,12 +70,12 @@ describe('generate-python-dict', () => {
       }
     };
     const schemas = extractSchemas(doc, null);
-    const { definition } = convertToTypedDict('User', schemas.User as any);
+    const { definition } = convertToTypedDict('User', schemas.User as OpenAPI.SchemaObject);
     expect(definition).toMatchSnapshot();
   });
 
   it('filters schemas by path prefixes', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {

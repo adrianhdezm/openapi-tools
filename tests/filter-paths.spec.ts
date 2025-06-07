@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { filterOpenApiPaths } from '../src/utils/filter-openapi-paths';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 
-const openApiDoc = {
+const openApiDoc: OpenAPI.Document = {
   openapi: '3.0.0',
   info: { title: 'Test', version: '1.0.0' },
   paths: {
@@ -108,7 +109,7 @@ const openApiDoc = {
 
 describe('filterOpenApiPaths', () => {
   it('filters by a single path and includes only referenced schemas', () => {
-    const filtered = filterOpenApiPaths(openApiDoc as any, ['/v1/models']);
+    const filtered = filterOpenApiPaths(openApiDoc, ['/v1/models']);
     expect(filtered.paths).toHaveProperty('/v1/models');
     expect(filtered.paths).not.toHaveProperty('/v1/chat/completions');
     expect(filtered.paths).not.toHaveProperty('/v1/other');
@@ -117,7 +118,7 @@ describe('filterOpenApiPaths', () => {
   });
 
   it('filters by multiple paths and includes all referenced schemas recursively', () => {
-    const filtered = filterOpenApiPaths(openApiDoc as any, ['/v1/chat/completions', '/v1/models']);
+    const filtered = filterOpenApiPaths(openApiDoc, ['/v1/chat/completions', '/v1/models']);
     expect(filtered.paths).toHaveProperty('/v1/chat/completions');
     expect(filtered.paths).toHaveProperty('/v1/models');
     expect(filtered.paths).not.toHaveProperty('/v1/other');
@@ -129,7 +130,7 @@ describe('filterOpenApiPaths', () => {
 
   it('returns the original document if none match', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const filtered = filterOpenApiPaths(openApiDoc as any, ['/notfound']);
+    const filtered = filterOpenApiPaths(openApiDoc, ['/notfound']);
     // Should return the original doc if no paths matched
     expect(filtered).toEqual(openApiDoc);
     expect(warnSpy).toHaveBeenCalledWith('\x1b[33m[openapi-tools] Warning:\x1b[0m Path "/notfound" not found in the OpenAPI spec.');

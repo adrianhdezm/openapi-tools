@@ -2,9 +2,6 @@ import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { collectSchemaRefs } from './collect-schema-refs.js';
 import { collectSchemas } from './collect-schemas.js';
 
-export type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
-export type JsonObject = { [key: string]: JsonValue };
-
 export function filterOpenApiPaths(doc: OpenAPI.Document, pathNames: string[]): OpenAPI.Document {
   const filteredPaths: OpenAPI.PathsObject = {};
   for (const pathName of pathNames) {

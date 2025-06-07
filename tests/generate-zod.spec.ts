@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Handlebars from 'handlebars';
 import ts from 'typescript';
+import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
 import { convertSchema } from '../src/utils/json-schema-to-zod';
 import { extractSchemas } from '../src/utils/extract-schemas';
 
@@ -11,14 +12,14 @@ const schemaTemplate = Handlebars.compile(fs.readFileSync(path.join(templateDir,
 
 describe('generate-zod', () => {
   it('generates a simple object schema', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {},
       components: { schemas: { User: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } } }
     };
     const schemas = extractSchemas(doc, null);
-    const { zodString } = convertSchema(schemas.User as any);
+    const { zodString } = convertSchema(schemas.User as OpenAPI.SchemaObject);
     const content = schemaTemplate({
       schemas: [{ schemaName: 'User', zodString }]
     });
@@ -28,7 +29,7 @@ describe('generate-zod', () => {
   });
 
   it('generates enums and nested arrays', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {},
@@ -40,7 +41,7 @@ describe('generate-zod', () => {
       }
     };
     const schemas = extractSchemas(doc, null);
-    const { zodString } = convertSchema(schemas.Wrapper as any);
+    const { zodString } = convertSchema(schemas.Wrapper as OpenAPI.SchemaObject);
     const content = schemaTemplate({
       schemas: [{ schemaName: 'Wrapper', zodString }]
     });
@@ -50,7 +51,7 @@ describe('generate-zod', () => {
   });
 
   it('filters schemas by path prefixes', () => {
-    const doc: any = {
+    const doc: OpenAPI.Document = {
       openapi: '3.1.0',
       info: { title: 't', version: '1' },
       paths: {

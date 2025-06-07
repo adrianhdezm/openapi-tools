@@ -78,7 +78,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       }
     }
     if (docLines.length > 0) {
-      header.push(`    """${docLines.join('\n')}"""`);
+      header.push(`    """\n    ${docLines.join('\n')}\n    """`);
     }
     definition = `${header.join('\n')}\n${fields.join('\n')}`;
   } else {

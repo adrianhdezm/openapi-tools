@@ -1,5 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`generate-python-dict > adds descriptions as comments 1`] = `
+"class User(TypedDict, total=False):
+    """
+    User object
+
+Attributes:
+    id: identifier
+    """
+    id: Required[str]"
+`;
+
 exports[`generate-python-dict > generates a simple object schema 1`] = `
 "from typing import TypedDict, Required
 class User(TypedDict, total=False):

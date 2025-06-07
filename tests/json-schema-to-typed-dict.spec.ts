@@ -70,8 +70,8 @@ describe('generate-python-dict', () => {
     };
     const schemas = extractSchemas(doc, null);
     const { definition } = convertToTypedDict('User', schemas.User as any);
-    expect(definition).toContain('"""User object"""');
-    expect(definition).toContain('# identifier');
+    expect(definition).toContain('"""User object\n\nAttributes:\n    id: identifier"""');
+    expect(definition).not.toContain('# identifier');
   });
 
   it('filters schemas by path prefixes', () => {

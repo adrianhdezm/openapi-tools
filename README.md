@@ -1,18 +1,30 @@
 # openapi-tools
 
-A CLI tool to work with OpenAPI specifications, including generation, validation, and more.
+**openapi-tools** is a small toolbox for slicing, validating and generating code from OpenAPI specifications. It ships as a command line utility so you can keep your API definitions tidy and reusable.
 
-## Usage Example
+## Features
 
-Below is a quick example using the OpenAPI Pet Store:
+- **Filter paths** – create a minimal spec containing only the operations you care about.
+- **Generate Zod schemas** – produce TypeScript models ready for runtime validation.
+- **Generate Python `TypedDicts`** – build strongly typed models for Python projects.
+
+## Installation
+
+Use `npx` for one-off runs or install globally:
+
+```bash
+npm install -g @ai-foundry/openapi-tools
+```
+
+The examples below use the OpenAPI Pet Store specification. More scenarios are available in the [examples directory](examples/README.md).
+
+### Quick Start
 
 ```bash
 npx @ai-foundry/openapi-tools filter --input openapi.yaml --output filtered.yaml --select-paths "/pet/{petId}"
 ```
 
-### Using with Docker
-
-You can also use the tool via Docker:
+### Using Docker
 
 ```bash
 docker run --rm -v $(pwd)/local-schemas:/app/schemas adrianhdezm/openapi-tools filter --input ./schemas/openapi.yaml --output ./schemas/filtered.yaml --select-paths "/pet/{petId}"
@@ -80,6 +92,12 @@ Options:
   -p, --select-paths <paths>  Comma-separated list of path prefixes
   -h, --help                  display help for command
 ```
+
+## Contributing
+
+1. Clone this repository and run `npm install`.
+2. Make your changes and add tests if applicable.
+3. Open a pull request – we welcome improvements and new features!
 
 ## License
 

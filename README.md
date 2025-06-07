@@ -60,7 +60,7 @@ Generate Zod schemas from an OpenAPI spec
 
 Options:
   --input <input>             Input OpenAPI file (YAML or JSON) or URL
-  --output <output>           Output directory for schemas
+  --output <output>           Output file for schemas
   -p, --select-paths <paths>  Comma-separated list of path prefixes
   -h, --help                  display help for command
 ```
@@ -74,7 +74,7 @@ Generate Python TypedDicts from an OpenAPI spec
 
 Options:
   --input <input>             Input OpenAPI file (YAML or JSON) or URL
-  --output <output>           Output directory for schemas
+  --output <output>           Output file for schemas
   -p, --select-paths <paths>  Comma-separated list of path prefixes
   -h, --help                  display help for command
 ```

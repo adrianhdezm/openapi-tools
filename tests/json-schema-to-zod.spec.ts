@@ -30,7 +30,7 @@ describe('convertSchema', () => {
     expect(zodString).toBe('z.object({\n  id: z.string(),\n  name: z.string().optional()\n})');
   });
 
-  it('adds descriptions as comments', () => {
+  it('adds descriptions as meta', () => {
     const schema = {
       type: 'object',
       description: 'User object',
@@ -40,6 +40,6 @@ describe('convertSchema', () => {
       required: ['id']
     } as any;
     const { zodString } = convertSchema(schema);
-    expect(zodString).toBe('z.object({\n  id: z.string() // identifier\n})');
+    expect(zodString).toBe('z.object({\n  id: z.string().meta({ description: "identifier" })\n})');
   });
 });

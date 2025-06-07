@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`generate-python-dict > generates a simple object schema 1`] = `
-"from typing import TypedDict
-class User(TypedDict):
-    id: str"
+"from typing import TypedDict, Required
+class User(TypedDict, total=False):
+    id: Required[str]"
 `;
 
 exports[`generate-python-dict > generates enums and nested arrays 1`] = `

@@ -50,9 +50,9 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     const fields: string[] = [];
     for (const [key, value] of Object.entries(props)) {
       const typeStr = toType(value as any);
-      if (!required.has(key)) {
-        typingImports.add('NotRequired');
-        fields.push(`    ${key}: NotRequired[${typeStr}]`);
+      if (required.has(key)) {
+        typingImports.add('Required');
+        fields.push(`    ${key}: Required[${typeStr}]`);
       } else {
         fields.push(`    ${key}: ${typeStr}`);
       }
@@ -60,7 +60,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     if (fields.length === 0) {
       fields.push('    pass');
     }
-    definition = `class ${name}(TypedDict):\n${fields.join('\n')}`;
+    definition = `class ${name}(TypedDict, total=False):\n${fields.join('\n')}`;
   } else {
     const typeStr = toType(schema);
     definition = `${name} = ${typeStr}`;

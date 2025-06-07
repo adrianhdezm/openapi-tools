@@ -6,7 +6,7 @@ export type JsonObject = {
 };
 
 export async function isValidOpenapiSchema(doc: unknown): Promise<boolean> {
-  const response = await validate('https://spec.openapis.org/oas/3.1/schema-base', doc as unknown as Json);
+  const response = await validate('https://spec.openapis.org/oas/3.1/schema', doc as unknown as Json);
   if (response.valid) {
     return true;
   } else {

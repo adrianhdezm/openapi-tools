@@ -96,7 +96,12 @@ program
     const schemaNames: string[] = [];
     for (const [name, schema] of Object.entries(schemas)) {
       const { zodString, imports } = convertSchema(schema as any);
-      const content = schemaTemplate({ schemaName: name, imports: Array.from(imports), zodString });
+      const content = schemaTemplate({
+        schemaName: name,
+        imports: Array.from(imports),
+        zodString,
+        description: (schema as any).description
+      });
       fs.writeFileSync(path.join(componentDir, `${name}.ts`), content, 'utf8');
       schemaNames.push(name);
     }

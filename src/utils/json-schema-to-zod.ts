@@ -41,7 +41,9 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
           if (!required.has(key)) {
             expr += '.optional()';
           }
-          return `${JSON.stringify(key)}: ${expr}`;
+          const desc = (value as any).description;
+          const comment = desc ? ` // ${desc.replace(/\n/g, ' ')}` : '';
+          return `${JSON.stringify(key)}: ${expr}${comment}`;
         });
         return `z.object({ ${fields.join(', ')} })`;
       }

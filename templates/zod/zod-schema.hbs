@@ -1,6 +1,7 @@
 {{!-- prettier-ignore-start --}}
 import { z } from 'zod';
 {{#each imports}}import { {{this}} } from './{{this}}';{{/each}}
-export const {{schemaName}} = {{zodString}};
+{{#if description}}/** {{description}} */
+{{/if}}export const {{schemaName}} = {{zodString}};
 {{!-- prettier-ignore-end --}}
 

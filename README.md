@@ -58,6 +58,8 @@ Usage: openapi-tools generate-zod [options]
 
 Generate Zod schemas from an OpenAPI spec
 
+The output will be a single TypeScript file with all schemas.
+
 Options:
   --input <input>             Input OpenAPI file (YAML or JSON) or URL
   --output <output>           Output file for schemas

@@ -22,6 +22,7 @@
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "scripts": {
+    "dev": "node --import=tsx src/index.ts",
     "build": "tsc -p tsconfig.lib.json",
     "test": "vitest run",
     "format": "prettier --write . \"src/**/*.{ts,json,mjs,yml}\" --cache",

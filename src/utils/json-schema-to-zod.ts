@@ -13,7 +13,7 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const name = match?.[1] ?? s.$ref;
       imports.add(name);
-      return `z.lazy(() => ${name})`;
+      return name;
     }
 
     if (s.enum) {

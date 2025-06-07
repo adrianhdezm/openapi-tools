@@ -16,7 +16,7 @@ describe('convertSchema', () => {
       type: 'array',
       items: { $ref: '#/components/schemas/User' }
     } as any);
-    expect(zodString).toBe('z.array(z.lazy(() => User))');
+    expect(zodString).toBe('z.array(User)');
     expect(imports.has('User')).toBe(true);
   });
 

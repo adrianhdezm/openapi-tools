@@ -30,7 +30,11 @@ class Derived(Base, TypedDict, total=False):
 
 exports[`generate-python-dict > handles inline object properties 1`] = `
 "from typing import TypedDict, Required
+class PlaceLocation(TypedDict, total=False):
+    lat: Required[float]
+    lon: float
+
 class Place(TypedDict, total=False):
     name: Required[str]
-    location: Required[TypedDict('PlaceLocation', { 'lat': Required[float], 'lon': float }, total=False)]"
+    location: Required[PlaceLocation]"
 `;

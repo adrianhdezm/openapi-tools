@@ -21,3 +21,9 @@ exports[`generate-python-dict > generates enums and nested arrays 1`] = `
 "from typing import TypedDict, List
 Wrapper = List[Status]"
 `;
+
+exports[`generate-python-dict > handles allOf with refs and properties 1`] = `
+"from typing import TypedDict, Required
+class Derived(Base, TypedDict, total=False):
+    extra: Required[str]"
+`;

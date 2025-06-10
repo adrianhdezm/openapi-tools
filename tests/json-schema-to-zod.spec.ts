@@ -90,4 +90,22 @@ describe('convertSchema', () => {
     const { zodString } = convertSchema(schema);
     expect(zodString).toBe('z.object({\n  data: z.object({\n  id: z.string(),\n  flag: z.boolean().optional()\n})\n})');
   });
+
+  it('converts objects with additional properties', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        logit_bias: {
+          type: 'object',
+          additionalProperties: { type: 'integer' }
+        },
+        metadata: {
+          type: 'object',
+          additionalProperties: { type: 'string' }
+        }
+      }
+    } as OpenAPI.SchemaObject;
+    const { zodString } = convertSchema(schema);
+    expect(zodString).toBe('z.object({\n  logit_bias: z.record(z.number()).optional(),\n  metadata: z.record(z.string()).optional()\n})');
+  });
 });

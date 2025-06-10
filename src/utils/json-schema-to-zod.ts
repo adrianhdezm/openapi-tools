@@ -70,6 +70,10 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
         return `z.array(${walk(s.items)})`;
       case 'object':
       default: {
+        const hasProps = s.properties && Object.keys(s.properties).length > 0;
+        if (!hasProps && typeof s.additionalProperties === 'object') {
+          return `z.record(${walk(s.additionalProperties as any)})`;
+        }
         const props = s.properties ?? {};
         const required = new Set(s.required ?? []);
         const fields = Object.entries(props).map(([key, value]) => {

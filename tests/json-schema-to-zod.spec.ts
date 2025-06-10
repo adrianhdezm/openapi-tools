@@ -63,6 +63,15 @@ describe('convertSchema', () => {
     expect(imports.has('B')).toBe(true);
   });
 
+  it('handles oneOf with a single ref', () => {
+    const schema = {
+      oneOf: [{ $ref: '#/components/schemas/A' }]
+    } as OpenAPI.SchemaObject;
+    const { zodString, imports } = convertSchema(schema);
+    expect(zodString).toBe('A');
+    expect(imports.has('A')).toBe(true);
+  });
+
   it('converts inline object properties', () => {
     const schema = {
       type: 'object',

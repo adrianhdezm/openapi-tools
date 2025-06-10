@@ -126,6 +126,29 @@ describe('generate-python-dict', () => {
     expect(content).toMatchSnapshot();
   });
 
+  it('handles oneOf with a single ref', () => {
+    const doc: OpenAPI.Document = {
+      openapi: '3.1.0',
+      info: { title: 't', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          A: { type: 'object', properties: { id: { type: 'string' } } },
+          MessageSingle: { oneOf: [{ $ref: '#/components/schemas/A' }] }
+        }
+      }
+    };
+    const schemas = extractSchemas(doc, null);
+    const { definition, typingImports } = convertToTypedDict('MessageSingle', schemas.MessageSingle as OpenAPI.SchemaObject);
+    const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
+    const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
+    const tmp = path.join(__dirname, 'tmp_oneof_single.py');
+    fs.writeFileSync(tmp, content);
+    child_process.execSync(`python3 -m py_compile ${tmp}`);
+    fs.unlinkSync(tmp);
+    expect(content).toMatchSnapshot();
+  });
+
   it('handles inline object properties', () => {
     const doc: OpenAPI.Document = {
       openapi: '3.1.0',

@@ -33,6 +33,9 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       if (items.length === 0) {
         return 'z.any()';
       }
+      if (items.length === 1) {
+        return walk(items[0]!);
+      }
       const parts = items.map((sub) => walk(sub)).join(', ');
       return `z.union([${parts}])`;
     }
@@ -41,6 +44,9 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       const items = s.anyOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
       if (items.length === 0) {
         return 'z.any()';
+      }
+      if (items.length === 1) {
+        return walk(items[0]!);
       }
       const parts = items.map((sub) => walk(sub)).join(', ');
       return `z.union([${parts}])`;

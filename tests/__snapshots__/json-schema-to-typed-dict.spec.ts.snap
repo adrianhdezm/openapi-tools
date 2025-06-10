@@ -39,6 +39,11 @@ class Place(TypedDict, total=False):
     location: Required[PlaceLocation]"
 `;
 
+exports[`generate-python-dict > handles oneOf with a single ref 1`] = `
+"from typing import TypedDict
+MessageSingle = A"
+`;
+
 exports[`generate-python-dict > handles oneOf with refs 1`] = `
 "from typing import TypedDict, Union
 Message = Union[A, B]"

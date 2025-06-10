@@ -97,6 +97,9 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
         typingImports.add('Any');
         return 'Any';
       }
+      if (s.oneOf.length === 1) {
+        return toType(s.oneOf[0] as any, className);
+      }
       typingImports.add('Union');
       const parts = s.oneOf.map((sub, idx) => toType(sub as any, `${className}Option${idx}`)).join(', ');
       return `Union[${parts}]`;
@@ -106,6 +109,9 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       if (s.anyOf.length === 0) {
         typingImports.add('Any');
         return 'Any';
+      }
+      if (s.anyOf.length === 1) {
+        return toType(s.anyOf[0] as any, className);
       }
       typingImports.add('Union');
       const parts = s.anyOf.map((sub, idx) => toType(sub as any, `${className}Option${idx}`)).join(', ');

@@ -17,9 +17,12 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
     }
 
     if ('allOf' in s && Array.isArray(s.allOf)) {
-      const [first, ...rest] = s.allOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
-      let expr = walk(first);
-      for (const sub of rest) {
+      const items = s.allOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
+      if (items.length === 0) {
+        return 'z.any()';
+      }
+      let expr = walk(items[0]!);
+      for (const sub of items.slice(1)) {
         expr = `z.intersection(${expr}, ${walk(sub)})`;
       }
       return expr;

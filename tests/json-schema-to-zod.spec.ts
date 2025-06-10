@@ -53,6 +53,25 @@ describe('convertSchema', () => {
     expect(imports.has('Base')).toBe(true);
   });
 
+  it('handles oneOf with refs', () => {
+    const schema = {
+      oneOf: [{ $ref: '#/components/schemas/A' }, { $ref: '#/components/schemas/B' }]
+    } as OpenAPI.SchemaObject;
+    const { zodString, imports } = convertSchema(schema);
+    expect(zodString).toBe('z.union([A, B])');
+    expect(imports.has('A')).toBe(true);
+    expect(imports.has('B')).toBe(true);
+  });
+
+  it('handles oneOf with a single ref', () => {
+    const schema = {
+      oneOf: [{ $ref: '#/components/schemas/A' }]
+    } as OpenAPI.SchemaObject;
+    const { zodString, imports } = convertSchema(schema);
+    expect(zodString).toBe('A');
+    expect(imports.has('A')).toBe(true);
+  });
+
   it('converts inline object properties', () => {
     const schema = {
       type: 'object',

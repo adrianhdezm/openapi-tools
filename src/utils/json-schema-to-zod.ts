@@ -28,6 +28,30 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       return expr;
     }
 
+    if ('oneOf' in s && Array.isArray(s.oneOf)) {
+      const items = s.oneOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
+      if (items.length === 0) {
+        return 'z.any()';
+      }
+      if (items.length === 1) {
+        return walk(items[0]!);
+      }
+      const parts = items.map((sub) => walk(sub)).join(', ');
+      return `z.union([${parts}])`;
+    }
+
+    if ('anyOf' in s && Array.isArray(s.anyOf)) {
+      const items = s.anyOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
+      if (items.length === 0) {
+        return 'z.any()';
+      }
+      if (items.length === 1) {
+        return walk(items[0]!);
+      }
+      const parts = items.map((sub) => walk(sub)).join(', ');
+      return `z.union([${parts}])`;
+    }
+
     if (s.enum) {
       const values = s.enum.map((v) => JSON.stringify(v)).join(', ');
       return `z.enum([${values}])`;

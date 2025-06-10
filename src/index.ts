@@ -94,7 +94,9 @@ program
     const templateSource = fs.readFileSync(templatePath, 'utf8');
     const template = Handlebars.compile(templateSource);
 
-    const schemaData = Object.entries(schemas).map(([name, schema]) => {
+    const ordered = sortSchemas(schemas);
+    const schemaData = ordered.map((name) => {
+      const schema = schemas[name]!;
       const { zodString } = convertSchema(schema);
       const desc = schema.description as string | undefined;
       return {

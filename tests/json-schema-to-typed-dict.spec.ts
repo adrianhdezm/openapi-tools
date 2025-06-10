@@ -102,6 +102,42 @@ describe('generate-python-dict', () => {
     expect(content).toMatchSnapshot();
   });
 
+  it('handles inline object properties', () => {
+    const doc: OpenAPI.Document = {
+      openapi: '3.1.0',
+      info: { title: 't', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          Place: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              location: {
+                type: 'object',
+                properties: {
+                  lat: { type: 'number' },
+                  lon: { type: 'number' }
+                },
+                required: ['lat']
+              }
+            },
+            required: ['name', 'location']
+          }
+        }
+      }
+    };
+    const schemas = extractSchemas(doc, null);
+    const { definition, typingImports } = convertToTypedDict('Place', schemas.Place as OpenAPI.SchemaObject);
+    const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
+    const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
+    const tmp = path.join(__dirname, 'tmp_inline.py');
+    fs.writeFileSync(tmp, content);
+    child_process.execSync(`python3 -m py_compile ${tmp}`);
+    fs.unlinkSync(tmp);
+    expect(content).toMatchSnapshot();
+  });
+
   it('filters schemas by path prefixes', () => {
     const doc: OpenAPI.Document = {
       openapi: '3.1.0',

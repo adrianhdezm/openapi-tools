@@ -12,6 +12,7 @@ import { isValidOpenapiSchema } from './utils/validation.js';
 import { extractSchemas } from './utils/extract-schemas.js';
 import { convertSchema } from './utils/json-schema-to-zod.js';
 import { convertToTypedDict } from './utils/json-schema-to-typed-dict.js';
+import { sortSchemas } from './utils/sort-schemas.js';
 import Handlebars from 'handlebars';
 
 // __dirname in ES modules
@@ -93,7 +94,9 @@ program
     const templateSource = fs.readFileSync(templatePath, 'utf8');
     const template = Handlebars.compile(templateSource);
 
-    const schemaData = Object.entries(schemas).map(([name, schema]) => {
+    const ordered = sortSchemas(schemas);
+    const schemaData = ordered.map((name) => {
+      const schema = schemas[name]!;
       const { zodString } = convertSchema(schema);
       const desc = schema.description as string | undefined;
       return {
@@ -144,8 +147,9 @@ program
     const template = Handlebars.compile(templateSource);
 
     const typingImports = new Set<string>();
-    const definitions = Object.entries(schemas).map(([name, schema]) => {
-      const res = convertToTypedDict(name, schema);
+    const ordered = sortSchemas(schemas);
+    const definitions = ordered.map((name) => {
+      const res = convertToTypedDict(name, schemas[name]!);
       res.typingImports.forEach((i) => typingImports.add(i));
       return { name, definition: res.definition };
     });

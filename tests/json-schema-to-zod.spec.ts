@@ -43,4 +43,13 @@ describe('convertSchema', () => {
     const { zodString } = convertSchema(schema);
     expect(zodString).toBe('z.object({\n  id: z.string().meta({ description: "identifier" })\n})');
   });
+
+  it('handles allOf with refs and properties', () => {
+    const schema = {
+      allOf: [{ $ref: '#/components/schemas/Base' }, { type: 'object', properties: { extra: { type: 'string' } }, required: ['extra'] }]
+    } as OpenAPI.SchemaObject;
+    const { zodString, imports } = convertSchema(schema);
+    expect(zodString).toBe('z.intersection(Base, z.object({\n  extra: z.string()\n}))');
+    expect(imports.has('Base')).toBe(true);
+  });
 });

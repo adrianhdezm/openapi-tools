@@ -74,6 +74,34 @@ describe('generate-python-dict', () => {
     expect(definition).toMatchSnapshot();
   });
 
+  it('handles allOf with refs and properties', () => {
+    const doc: OpenAPI.Document = {
+      openapi: '3.1.0',
+      info: { title: 't', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          Base: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
+          Derived: {
+            allOf: [
+              { $ref: '#/components/schemas/Base' },
+              { type: 'object', properties: { extra: { type: 'string' } }, required: ['extra'] }
+            ]
+          }
+        }
+      }
+    };
+    const schemas = extractSchemas(doc, null);
+    const { definition, typingImports } = convertToTypedDict('Derived', schemas.Derived as OpenAPI.SchemaObject);
+    const typingLine = `from typing import ${Array.from(typingImports).join(', ')}`;
+    const content = [typingLine, '', definition, ''].filter(Boolean).join('\n');
+    const tmp = path.join(__dirname, 'tmp_allof.py');
+    fs.writeFileSync(tmp, content);
+    child_process.execSync(`python3 -m py_compile ${tmp}`);
+    fs.unlinkSync(tmp);
+    expect(content).toMatchSnapshot();
+  });
+
   it('filters schemas by path prefixes', () => {
     const doc: OpenAPI.Document = {
       openapi: '3.1.0',

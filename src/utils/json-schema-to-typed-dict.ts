@@ -8,6 +8,29 @@ export interface TypedDictResult {
 export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): TypedDictResult {
   const typingImports = new Set<string>(['TypedDict']);
 
+  function flatten(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): { bases: string[]; schema: OpenAPI.SchemaObject | null } {
+    if ('$ref' in s) {
+      const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
+      return { bases: [match?.[1] ?? s.$ref], schema: null };
+    }
+
+    if ('allOf' in s && Array.isArray(s.allOf)) {
+      const bases: string[] = [];
+      const merged: OpenAPI.SchemaObject = { type: 'object', properties: {}, required: [] };
+      for (const sub of s.allOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>) {
+        const res = flatten(sub);
+        bases.push(...res.bases);
+        if (res.schema) {
+          Object.assign(merged.properties!, res.schema.properties);
+          merged.required = Array.from(new Set([...(merged.required ?? []), ...(res.schema.required ?? [])]));
+        }
+      }
+      return { bases, schema: merged };
+    }
+
+    return { bases: [], schema: s };
+  }
+
   function toType(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): string {
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
@@ -43,10 +66,12 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     }
   }
 
+  const { bases, schema: flat } = flatten(schema);
+
   let definition = '';
-  if (!('$ref' in schema) && schema.type === 'object') {
-    const props = schema.properties ?? {};
-    const required = new Set(schema.required ?? []);
+  if (flat && flat.type === 'object') {
+    const props = flat.properties ?? {};
+    const required = new Set(flat.required ?? []);
     const fields: string[] = [];
     const attrLines: string[] = [];
     for (const [key, value] of Object.entries(props)) {
@@ -65,13 +90,14 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     if (fields.length === 0) {
       fields.push('    pass');
     }
-    const header = [`class ${name}(TypedDict, total=False):`];
+    const baseList = bases.length > 0 ? `${bases.join(', ')}, ` : '';
+    const header = [`class ${name}(${baseList}TypedDict, total=False):`];
     const docLines: string[] = [];
-    if (schema.description) {
-      docLines.push((schema.description as string).replace(/\n/g, ' '));
+    if (flat.description) {
+      docLines.push((flat.description as string).replace(/\n/g, ' '));
     }
     if (attrLines.length > 0) {
-      if (schema.description) docLines.push('');
+      if (flat.description) docLines.push('');
       docLines.push('Attributes:');
       for (const line of attrLines) {
         docLines.push(`    ${line}`);

@@ -16,6 +16,18 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
       return name;
     }
 
+    if ('allOf' in s && Array.isArray(s.allOf)) {
+      const items = s.allOf as Array<OpenAPI.SchemaObject | OpenAPI.ReferenceObject>;
+      if (items.length === 0) {
+        return 'z.any()';
+      }
+      let expr = walk(items[0]!);
+      for (const sub of items.slice(1)) {
+        expr = `z.intersection(${expr}, ${walk(sub)})`;
+      }
+      return expr;
+    }
+
     if (s.enum) {
       const values = s.enum.map((v) => JSON.stringify(v)).join(', ');
       return `z.enum([${values}])`;

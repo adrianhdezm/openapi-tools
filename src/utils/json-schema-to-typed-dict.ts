@@ -92,6 +92,26 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       return `${refName}`;
     }
 
+    if ('oneOf' in s && Array.isArray(s.oneOf)) {
+      if (s.oneOf.length === 0) {
+        typingImports.add('Any');
+        return 'Any';
+      }
+      typingImports.add('Union');
+      const parts = s.oneOf.map((sub, idx) => toType(sub as any, `${className}Option${idx}`)).join(', ');
+      return `Union[${parts}]`;
+    }
+
+    if ('anyOf' in s && Array.isArray(s.anyOf)) {
+      if (s.anyOf.length === 0) {
+        typingImports.add('Any');
+        return 'Any';
+      }
+      typingImports.add('Union');
+      const parts = s.anyOf.map((sub, idx) => toType(sub as any, `${className}Option${idx}`)).join(', ');
+      return `Union[${parts}]`;
+    }
+
     if (s.enum) {
       typingImports.add('Literal');
       const values = s.enum.map((v) => JSON.stringify(v)).join(', ');

@@ -80,7 +80,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       }
     }
     if (docLines.length > 0) {
-      header.push(`    """\n    ${docLines.join('\n')}\n    """`);
+      header.push(`    """\n    ${docLines.join('\n    ')}\n    """`);
     }
     extraDefs.push(`${header.join('\n')}\n${fields.join('\n')}`);
   }
@@ -192,7 +192,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       }
     }
     if (docLines.length > 0) {
-      header.push(`    """\n    ${docLines.join('\n')}\n    """`);
+      header.push(`    """\n    ${docLines.join('\n    ')}\n    """`);
     }
     definition = `${header.join('\n')}\n${fields.join('\n')}`;
   } else {

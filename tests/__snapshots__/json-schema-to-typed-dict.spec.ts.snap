@@ -4,9 +4,9 @@ exports[`generate-python-dict > adds descriptions as comments 1`] = `
 "class User(TypedDict, total=False):
     """
     User object
-
-Attributes:
-    id: identifier
+    
+    Attributes:
+        id: identifier
     """
     id: Required[str]"
 `;

@@ -39,6 +39,13 @@ class Place(TypedDict, total=False):
     location: Required[PlaceLocation]"
 `;
 
+exports[`generate-python-dict > handles objects with additional properties 1`] = `
+"from typing import TypedDict
+class Config(TypedDict, total=False):
+    logit_bias: dict[str, int]
+    metadata: dict[str, str]"
+`;
+
 exports[`generate-python-dict > handles oneOf with a single ref 1`] = `
 "from typing import TypedDict
 MessageSingle = A"

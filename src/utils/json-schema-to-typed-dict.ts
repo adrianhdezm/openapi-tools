@@ -142,6 +142,10 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
           buildClass(className, s);
           return className;
         }
+        if (s.additionalProperties && typeof s.additionalProperties === 'object') {
+          const valType = toType(s.additionalProperties as any, `${className}Additional`);
+          return `dict[str, ${valType}]`;
+        }
         typingImports.add('Any');
         return 'dict[str, Any]';
       default:

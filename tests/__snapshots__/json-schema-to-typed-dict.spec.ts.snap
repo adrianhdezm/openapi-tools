@@ -27,3 +27,14 @@ exports[`generate-python-dict > handles allOf with refs and properties 1`] = `
 class Derived(Base, TypedDict, total=False):
     extra: Required[str]"
 `;
+
+exports[`generate-python-dict > handles inline object properties 1`] = `
+"from typing import TypedDict, Required
+class PlaceLocation(TypedDict, total=False):
+    lat: Required[float]
+    lon: float
+
+class Place(TypedDict, total=False):
+    name: Required[str]
+    location: Required[PlaceLocation]"
+`;

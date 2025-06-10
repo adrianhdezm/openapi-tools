@@ -52,4 +52,23 @@ describe('convertSchema', () => {
     expect(zodString).toBe('z.intersection(Base, z.object({\n  extra: z.string()\n}))');
     expect(imports.has('Base')).toBe(true);
   });
+
+  it('converts inline object properties', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            flag: { type: 'boolean' }
+          },
+          required: ['id']
+        }
+      },
+      required: ['data']
+    } as OpenAPI.SchemaObject;
+    const { zodString } = convertSchema(schema);
+    expect(zodString).toBe('z.object({\n  data: z.object({\n  id: z.string(),\n  flag: z.boolean().optional()\n})\n})');
+  });
 });

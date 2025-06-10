@@ -74,6 +74,29 @@ describe('generate-python-dict', () => {
     expect(definition).toMatchSnapshot();
   });
 
+  it('formats multiline attribute descriptions', () => {
+    const doc: OpenAPI.Document = {
+      openapi: '3.1.0',
+      info: { title: 't', version: '1' },
+      paths: {},
+      components: {
+        schemas: {
+          Multi: {
+            type: 'object',
+            description: 'Multi attr example',
+            properties: {
+              id: { type: 'string', description: 'identifier\nfirst line' },
+              name: { type: 'string', description: 'the name' }
+            }
+          }
+        }
+      }
+    };
+    const schemas = extractSchemas(doc, null);
+    const { definition } = convertToTypedDict('Multi', schemas.Multi as OpenAPI.SchemaObject);
+    expect(definition).toMatchSnapshot();
+  });
+
   it('handles allOf with refs and properties', () => {
     const doc: OpenAPI.Document = {
       openapi: '3.1.0',

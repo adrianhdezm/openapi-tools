@@ -60,7 +60,12 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
         fields.push(`    ${key}: ${typeStr}`);
       }
       if (desc) {
-        attrLines.push(`${key}: ${desc.replace(/\n/g, ' ')}`);
+        const descLines = String(desc).split('\n');
+        attrLines.push(`${key}:`);
+        for (const dl of descLines) {
+          attrLines.push(`    ${dl}`);
+        }
+        attrLines.push('');
       }
     }
     if (fields.length === 0) {
@@ -73,6 +78,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       docLines.push((flat.description as string).replace(/\n/g, ' '));
     }
     if (attrLines.length > 0) {
+      if (attrLines[attrLines.length - 1] === '') attrLines.pop();
       if (flat.description) docLines.push('');
       docLines.push('Attributes:');
       for (const line of attrLines) {
@@ -80,7 +86,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       }
     }
     if (docLines.length > 0) {
-      header.push(`    """\n    ${docLines.join('\n')}\n    """`);
+      header.push(`    """\n    ${docLines.join('\n    ')}\n    """`);
     }
     extraDefs.push(`${header.join('\n')}\n${fields.join('\n')}`);
   }
@@ -172,7 +178,12 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
         fields.push(`    ${key}: ${typeStr}`);
       }
       if (desc) {
-        attrLines.push(`${key}: ${desc.replace(/\n/g, ' ')}`);
+        const descLines = String(desc).split('\n');
+        attrLines.push(`${key}:`);
+        for (const dl of descLines) {
+          attrLines.push(`    ${dl}`);
+        }
+        attrLines.push('');
       }
     }
     if (fields.length === 0) {
@@ -185,6 +196,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       docLines.push((flat.description as string).replace(/\n/g, ' '));
     }
     if (attrLines.length > 0) {
+      if (attrLines[attrLines.length - 1] === '') attrLines.pop();
       if (flat.description) docLines.push('');
       docLines.push('Attributes:');
       for (const line of attrLines) {
@@ -192,7 +204,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
       }
     }
     if (docLines.length > 0) {
-      header.push(`    """\n    ${docLines.join('\n')}\n    """`);
+      header.push(`    """\n    ${docLines.join('\n    ')}\n    """`);
     }
     definition = `${header.join('\n')}\n${fields.join('\n')}`;
   } else {

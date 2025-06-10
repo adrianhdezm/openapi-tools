@@ -4,11 +4,29 @@ exports[`generate-python-dict > adds descriptions as comments 1`] = `
 "class User(TypedDict, total=False):
     """
     User object
-
-Attributes:
-    id: identifier
+    
+    Attributes:
+        id:
+            identifier
     """
     id: Required[str]"
+`;
+
+exports[`generate-python-dict > formats multiline attribute descriptions 1`] = `
+"class Multi(TypedDict, total=False):
+    """
+    Multi attr example
+    
+    Attributes:
+        id:
+            identifier
+            first line
+        
+        name:
+            the name
+    """
+    id: str
+    name: str"
 `;
 
 exports[`generate-python-dict > generates a simple object schema 1`] = `

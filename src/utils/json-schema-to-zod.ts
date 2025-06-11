@@ -1,4 +1,5 @@
 import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
+import { toCamelCase } from './case.js';
 
 export interface ZodResult {
   zodString: string;
@@ -11,7 +12,8 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
   function walk(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): string {
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
-      const name = match?.[1] ?? s.$ref;
+      const raw = match?.[1] ?? s.$ref;
+      const name = `${toCamelCase(raw)}Schema`;
       imports.add(name);
       return name;
     }

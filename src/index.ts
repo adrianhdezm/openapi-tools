@@ -12,6 +12,7 @@ import { isValidOpenapiSchema } from './utils/validation.js';
 import { extractSchemas } from './utils/extract-schemas.js';
 import { convertSchema } from './utils/json-schema-to-zod.js';
 import { convertToTypedDict } from './utils/json-schema-to-typed-dict.js';
+import { toCamelCase, toPascalCase } from './utils/case.js';
 import { sortSchemas } from './utils/sort-schemas.js';
 import Handlebars from 'handlebars';
 
@@ -95,12 +96,12 @@ program
     const template = Handlebars.compile(templateSource);
 
     const ordered = sortSchemas(schemas);
-    const schemaData = ordered.map((name) => {
-      const schema = schemas[name]!;
+    const schemaData = ordered.map((rawName) => {
+      const schema = schemas[rawName]!;
       const { zodString } = convertSchema(schema);
       const desc = schema.description as string | undefined;
       return {
-        schemaName: name,
+        schemaName: `${toCamelCase(rawName)}Schema`,
         zodString,
         description: desc ? desc.replace(/\n/g, ' ') : undefined
       };
@@ -148,10 +149,10 @@ program
 
     const typingImports = new Set<string>();
     const ordered = sortSchemas(schemas);
-    const definitions = ordered.map((name) => {
-      const res = convertToTypedDict(name, schemas[name]!);
+    const definitions = ordered.map((rawName) => {
+      const res = convertToTypedDict(rawName, schemas[rawName]!);
       res.typingImports.forEach((i) => typingImports.add(i));
-      return { name, definition: res.definition };
+      return { name: toPascalCase(rawName), definition: res.definition };
     });
 
     const content = template({

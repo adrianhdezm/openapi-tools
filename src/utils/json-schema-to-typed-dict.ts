@@ -1,4 +1,5 @@
 import type { OpenAPIV3_1 as OpenAPI } from 'openapi-types';
+import { toPascalCase } from './case.js';
 
 export interface TypedDictResult {
   definition: string;
@@ -6,22 +7,15 @@ export interface TypedDictResult {
 }
 
 export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): TypedDictResult {
+  name = toPascalCase(name);
   const typingImports = new Set<string>(['TypedDict']);
   const extraDefs: string[] = [];
-
-  function toPascal(str: string): string {
-    return str
-      .replace(/[^a-zA-Z0-9]+/g, ' ')
-      .split(' ')
-      .filter(Boolean)
-      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-      .join('');
-  }
 
   function flatten(s: OpenAPI.SchemaObject | OpenAPI.ReferenceObject): { bases: string[]; schema: OpenAPI.SchemaObject | null } {
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
-      return { bases: [match?.[1] ?? s.$ref], schema: null };
+      const refName = match?.[1] ?? s.$ref;
+      return { bases: [toPascalCase(refName)], schema: null };
     }
 
     if ('allOf' in s && Array.isArray(s.allOf)) {
@@ -51,7 +45,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     const fields: string[] = [];
     const attrLines: string[] = [];
     for (const [key, value] of Object.entries(props)) {
-      const typeStr = toType(value as any, `${className}${toPascal(key)}`);
+      const typeStr = toType(value as any, `${className}${toPascalCase(key)}`);
       const desc = (value as any).description;
       if (required.has(key)) {
         typingImports.add('Required');
@@ -95,7 +89,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const refName = match?.[1] ?? s.$ref;
-      return `${refName}`;
+      return `${toPascalCase(refName)}`;
     }
 
     if ('oneOf' in s && Array.isArray(s.oneOf)) {
@@ -169,7 +163,7 @@ export function convertToTypedDict(name: string, schema: OpenAPI.SchemaObject | 
     const fields: string[] = [];
     const attrLines: string[] = [];
     for (const [key, value] of Object.entries(props)) {
-      const typeStr = toType(value as any, `${name}${toPascal(key)}`);
+      const typeStr = toType(value as any, `${name}${toPascalCase(key)}`);
       const desc = (value as any).description;
       if (required.has(key)) {
         typingImports.add('Required');

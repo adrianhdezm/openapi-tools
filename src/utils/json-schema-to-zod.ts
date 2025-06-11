@@ -13,7 +13,7 @@ export function convertSchema(schema: OpenAPI.SchemaObject | OpenAPI.ReferenceOb
     if ('$ref' in s) {
       const match = s.$ref.match(/^#\/components\/schemas\/(.+)$/);
       const raw = match?.[1] ?? s.$ref;
-      const name = toCamelCase(raw);
+      const name = `${toCamelCase(raw)}Schema`;
       imports.add(name);
       return name;
     }

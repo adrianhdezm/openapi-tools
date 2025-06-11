@@ -101,7 +101,7 @@ program
       const { zodString } = convertSchema(schema);
       const desc = schema.description as string | undefined;
       return {
-        schemaName: toCamelCase(rawName),
+        schemaName: `${toCamelCase(rawName)}Schema`,
         zodString,
         description: desc ? desc.replace(/\n/g, ' ') : undefined
       };

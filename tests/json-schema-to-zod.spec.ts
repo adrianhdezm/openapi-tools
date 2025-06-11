@@ -17,8 +17,8 @@ describe('convertSchema', () => {
       type: 'array',
       items: { $ref: '#/components/schemas/User' }
     } as OpenAPI.SchemaObject);
-    expect(zodString).toBe('z.array(user)');
-    expect(imports.has('user')).toBe(true);
+    expect(zodString).toBe('z.array(userSchema)');
+    expect(imports.has('userSchema')).toBe(true);
   });
 
   it('converts objects with optional fields', () => {
@@ -49,8 +49,8 @@ describe('convertSchema', () => {
       allOf: [{ $ref: '#/components/schemas/Base' }, { type: 'object', properties: { extra: { type: 'string' } }, required: ['extra'] }]
     } as OpenAPI.SchemaObject;
     const { zodString, imports } = convertSchema(schema);
-    expect(zodString).toBe('z.intersection(base, z.object({\n  extra: z.string()\n}))');
-    expect(imports.has('base')).toBe(true);
+    expect(zodString).toBe('z.intersection(baseSchema, z.object({\n  extra: z.string()\n}))');
+    expect(imports.has('baseSchema')).toBe(true);
   });
 
   it('handles oneOf with refs', () => {
@@ -58,9 +58,9 @@ describe('convertSchema', () => {
       oneOf: [{ $ref: '#/components/schemas/A' }, { $ref: '#/components/schemas/B' }]
     } as OpenAPI.SchemaObject;
     const { zodString, imports } = convertSchema(schema);
-    expect(zodString).toBe('z.union([a, b])');
-    expect(imports.has('a')).toBe(true);
-    expect(imports.has('b')).toBe(true);
+    expect(zodString).toBe('z.union([aSchema, bSchema])');
+    expect(imports.has('aSchema')).toBe(true);
+    expect(imports.has('bSchema')).toBe(true);
   });
 
   it('handles oneOf with a single ref', () => {
@@ -68,8 +68,8 @@ describe('convertSchema', () => {
       oneOf: [{ $ref: '#/components/schemas/A' }]
     } as OpenAPI.SchemaObject;
     const { zodString, imports } = convertSchema(schema);
-    expect(zodString).toBe('a');
-    expect(imports.has('a')).toBe(true);
+    expect(zodString).toBe('aSchema');
+    expect(imports.has('aSchema')).toBe(true);
   });
 
   it('converts inline object properties', () => {

@@ -8,6 +8,11 @@
 - **Generate Zod schemas** – produce TypeScript models ready for runtime validation.
 - **Generate Python `TypedDicts`** – build strongly typed models for Python projects.
 
+## Requirements
+
+- Node.js 18 or later
+- npm 9 or later
+
 ## Installation
 
 Use `npx` for one-off runs or install globally:
@@ -22,6 +27,13 @@ The examples below use the OpenAPI Pet Store specification. More scenarios are a
 
 ```bash
 npx @ai-foundry/openapi-tools filter --input openapi.yaml --output filtered.yaml --select-paths "/pet/{petId}"
+```
+
+To generate typed models:
+
+```bash
+npx @ai-foundry/openapi-tools generate-zod --input openapi.yaml --output models.ts
+npx @ai-foundry/openapi-tools generate-python-dict --input openapi.yaml --output models.py
 ```
 
 ### Using Docker
